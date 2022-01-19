@@ -2,6 +2,15 @@ import os
 import shutil
 import math
 
+import torch
+import torchvision.transforms as transforms
+from torchvision.datasets import ImageFolder
+from torch.utils.data import DataLoader
+
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+
 # 원본 데이터셋 연결
 original_dataset_dir = './dataset'
 classes_list = os.listdir(original_dataset_dir)
@@ -57,3 +66,19 @@ for cls in classes_list:
         src = os.path.join(path, fname)
         dst = os.path.join(os.path.join(test_dir, cls), fname)
         shutil.copyfile(src, dst)
+
+# 모델 학습을 위한 준비
+USE_CUDA = torch.cuda.is_available()
+DEVICE = torch.device("cuda" if USE_CUDA else "cpu")    # GPU 존재시 GPU 실행(CUDA)
+
+BATCH_SIZE = 256
+EPOCH = 30
+
+# 이미지 데이터를 64*64의 크기의 Tensor로 변환
+transform_base = transforms.Compose([transforms.Resize((64,64)), transforms.ToTensor()])
+train_dataset = ImageFolder(root='./splitted/train', transform=transform_base)
+val_dataset = ImageFolder(root='./splitted/val', transform=transform_base)
+
+# Tensor화 된 이미지 데이터를 배치 사이즈로 분리(매 epoch마다 순서가 섞이며, 데이터 로딩에 서브프로세스 2개 사용)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
