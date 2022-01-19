@@ -82,3 +82,55 @@ val_dataset = ImageFolder(root='./splitted/val', transform=transform_base)
 # Tensor화 된 이미지 데이터를 배치 사이즈로 분리(매 epoch마다 순서가 섞이며, 데이터 로딩에 서브프로세스 2개 사용)
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
 val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
+
+
+# 네트워크 설계
+class CNN_Model(nn.Module):
+
+    def __init__(self):
+        super(CNN_Model, self).__init__()
+
+        # 3-Convolution Layer
+        self.conv1 = nn.Conv2d(3, 32, 3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+        self.conv3 = nn.Conv2d(64, 64, 3, padding=1)
+
+        # Pooling Layer
+        self.pool = nn.MaxPool2d(2, 2)
+
+        # fully connected layer
+        self.fc1 = nn.Linear(4096, 512)
+        self.fc2 = nn.Linear(512, 33)
+
+        # 활성화 함수 ReLU
+        self.relu = nn.ReLU()
+
+    def forward(self, x):
+        # Convolution+activation -> Pooling -> Dropout
+        x = self.conv1(x)
+        x = self.relu(x)
+        x = self.pool(x)
+        x = F.dropout(x, p=0.25, training=self.training)    # 25% 노드는 Dropout -> 과적합 방지 + 앙상블 비슷한 효과
+
+        x = self.conv2(x)
+        x = self.relu(x)
+        x = self.pool(x)
+        x = F.dropout(x, p=0.25, training=self.training)
+
+        x = self.conv3(x)
+        x = self.relu(x)
+        x = self.pool(x)
+        x = self.dropout(x, p=0.25, training=self.training)
+
+        # fully connect+activation -> Dropout -> fully connect
+        x = x.view(-1, 4096)    # fc를 위한 데이터 재배치
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = F.dropout(x, p=0.5, training=self.training)
+        x = self.fc2(x)
+
+        return F.log_softmax(x, dim=1)      # CNN 출력에 softmax 함수를 이용해 데이터가 각 클래스로 분류될 확률을 출력
+
+
+cnn = CNN_Model().to(DEVICE)
+optimizer = optim.Adam(cnn.parameters(), lr=0.001)      # adam optimizer 사용, 학습률은 0.001

@@ -12,3 +12,4 @@
 ## 5. 참고자료(사이트)
 - [PyTorch 공식 설명](https://pytorch.org/docs/stable/index.html)
 - [작물 잎 사진 원본데이터](https://data.mendeley.com/datasets/tywbtsjrjv/1)
+- [Dropout에 대한 간단한 설명](https://heytech.tistory.com/127)
