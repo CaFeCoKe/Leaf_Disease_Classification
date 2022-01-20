@@ -19,18 +19,15 @@ classes_list = os.listdir(original_dataset_dir)
 base_dir = './splitted'
 os.mkdir(base_dir)
 
-# splitted 폴더에 훈련, 평가, 테스트 데이터 폴더 생성
+# splitted 폴더에 훈련, 테스트 데이터 폴더 생성
 train_dir = os.path.join(base_dir, 'train')
 os.mkdir(train_dir)
-validation_dir = os.path.join(base_dir, 'val')
-os.mkdir(validation_dir)
 test_dir = os.path.join(base_dir, 'test')
 os.mkdir(test_dir)
 
-# 훈련, 평가, 테스트 데이터 폴더에 원본 데이터와 같은 하위폴더 생성
+# 훈련, 테스트 데이터 폴더에 원본 데이터와 같은 하위폴더 생성
 for cls in classes_list:
     os.mkdir(os.path.join(train_dir, cls))
-    os.mkdir(os.path.join(validation_dir, cls))
     os.mkdir(os.path.join(test_dir, cls))
 
 # 데이터 분할 및 클래스별 데이터 개수 확인
@@ -38,17 +35,14 @@ for cls in classes_list:
     path = os.path.join(original_dataset_dir, cls)
     fnames = os.listdir(path)
 
-    # 파일 개수 비율 (훈련:평가:테스트 = 6:2:2)
-    train_size = math.floor(len(fnames) * 0.6)
-    validation_size = math.floor(len(fnames) * 0.2)
-    test_size = math.floor(len(fnames) * 0.2)
+    # 파일 개수 비율 (훈련:테스트 = 7:3)
+    train_size = math.floor(len(fnames) * 0.7)
+    test_size = math.floor(len(fnames) * 0.3)
 
     # 파일 개수 표시
     train_fnames = fnames[:train_size]
     print("Train size(", cls, "): ", len(train_fnames))
-    validation_fnames = fnames[train_size:(validation_size + train_size)]
-    print("Validation size(", cls, "): ", len(validation_fnames))
-    test_fnames = fnames[(train_size + validation_size):(validation_size + train_size + test_size)]
+    test_fnames = fnames[train_size:(test_size + train_size)]
     print("Test size(", cls, "): ", len(test_fnames))
 
     # 데이터 분할 저장
@@ -56,11 +50,6 @@ for cls in classes_list:
         src = os.path.join(path, fname)    # 복사할 파일의 경로 지정
         dst = os.path.join(os.path.join(train_dir, cls), fname)     # 붙여넣기할 경로 지정
         shutil.copyfile(src, dst)       # src 경로의 파일을 복사, dst 경로에 붙여넣기
-
-    for fname in validation_fnames:
-        src = os.path.join(path, fname)
-        dst = os.path.join(os.path.join(validation_dir, cls), fname)
-        shutil.copyfile(src, dst)
 
     for fname in test_fnames:
         src = os.path.join(path, fname)
@@ -77,11 +66,11 @@ EPOCH = 30
 # 이미지 데이터를 64*64의 크기의 Tensor로 변환
 transform_base = transforms.Compose([transforms.Resize((64,64)), transforms.ToTensor()])
 train_dataset = ImageFolder(root='./splitted/train', transform=transform_base)
-val_dataset = ImageFolder(root='./splitted/val', transform=transform_base)
+test_dataset = ImageFolder(root='./splitted/test', transform=transform_base)
 
 # Tensor화 된 이미지 데이터를 배치 사이즈로 분리(매 epoch마다 순서가 섞이며, 데이터 로딩에 서브프로세스 2개 사용)
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
-val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
 
 
 # 네트워크 설계
