@@ -127,12 +127,32 @@ optimizer = optim.Adam(cnn.parameters(), lr=0.001)      # adam optimizer 사용,
 
 # 훈련 데이터로 학습하여 모델화
 def train(model, train_loader, optimizer):
-    model.train()
-    for batch_idx, (data, target) in enumerate(train_loader):   # train_loader 형태 = 배치 인덱스 (data, target)
+    model.train()       # 훈련을 위해 Dropout 설정
+    for batch_idx, (data, target) in enumerate(train_loader):   # train_loader 형태 = 배치 인덱스 (data, target) -> 왜 배치 인덱스가 필요할까??
         data, target = data.to(DEVICE), target.to(DEVICE)
         optimizer.zero_grad()       # optimizer 초기화
         output = model(data)
         loss = F.cross_entropy(output, target)      # Loss 함수로 교차 엔트로피 사용
         loss.backward()     # 역전파로 Gradient를 계산 후 파라미터에 할당
         optimizer.step()    # 파라미터 업데이트
+
+
+# 모델 평가
+def evaluate(model, test_loader):
+    model.eval()       # 평가를 위해 훈련과정에서 Dropout 한 노드설정을 해제
+    test_loss = 0      # Loss 값 초기화
+    correct = 0        # 올바르게 예측 된 데이터의 개수
+
+    with torch.no_grad():       # Gradient 계산 비활성화 (모델 평가에는 파라미터 업데이트 X)
+        for data, target in test_loader:
+            data, target = data.to(DEVICE), target.to(DEVICE)
+            output = model(data)
+            test_loss += F.cross_entropy(output, target, reduction='sum').item()    # Loss 함수로 교차 엔트로피 사용
+
+            pred = output.max(1, keepdim=True)[1]       # 33개의 클래스에 속할 확률값 중 가장 높은값의 인덱스를 예측값으로 지정
+            correct += pred.eq(target.view_as(pred)).sum().item()       # target의 Tensor를 pred의 Tensor로 재정렬 후 비교하여 같으면 그 수를 합쳐 값 증가 (정확도 측정)
+
+    test_loss /= len(test_loader.dataset)       # Loss 값을 Batch 값으로 나누어 미니 배치마다의 Loss 값의 평균을 구함
+    test_accuracy = 100. * correct / len(test_loader.dataset)       # 정확도 값을 Batch 값으로 나누어 미니 배치마다의 정확도 평균을 구함
+    return test_loss, test_accuracy
 
