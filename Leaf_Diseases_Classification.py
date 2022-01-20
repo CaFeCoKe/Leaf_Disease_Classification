@@ -123,3 +123,16 @@ class CNN_Model(nn.Module):
 
 cnn = CNN_Model().to(DEVICE)
 optimizer = optim.Adam(cnn.parameters(), lr=0.001)      # adam optimizer 사용, 학습률은 0.001
+
+
+# 훈련 데이터로 학습하여 모델화
+def train(model, train_loader, optimizer):
+    model.train()
+    for batch_idx, (data, target) in enumerate(train_loader):   # train_loader 형태 = 배치 인덱스 (data, target)
+        data, target = data.to(DEVICE), target.to(DEVICE)
+        optimizer.zero_grad()       # optimizer 초기화
+        output = model(data)
+        loss = F.cross_entropy(output, target)      # Loss 함수로 교차 엔트로피 사용
+        loss.backward()     # 역전파로 Gradient를 계산 후 파라미터에 할당
+        optimizer.step()    # 파라미터 업데이트
+
