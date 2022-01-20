@@ -15,7 +15,7 @@ import torch.optim as optim
 original_dataset_dir = './dataset'
 classes_list = os.listdir(original_dataset_dir)
 
-# 훈련, 평가, 테스트 데이터를 저장할 기본폴더 생성
+# 훈련, 테스트 데이터를 저장할 기본폴더 생성
 base_dir = './splitted'
 os.mkdir(base_dir)
 
