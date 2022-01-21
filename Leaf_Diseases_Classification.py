@@ -1,6 +1,8 @@
 import os
 import shutil
 import math
+import time
+import copy
 
 import torch
 import torchvision.transforms as transforms
@@ -125,7 +127,7 @@ cnn = CNN_Model().to(DEVICE)
 optimizer = optim.Adam(cnn.parameters(), lr=0.001)      # adam optimizer 사용, 학습률은 0.001
 
 
-# 훈련 데이터로 학습하여 모델화
+# 훈련 데이터로 학습하여 모델화 함수
 def train(model, train_loader, optimizer):
     model.train()       # 훈련을 위해 Dropout 설정
     for batch_idx, (data, target) in enumerate(train_loader):   # train_loader 형태 = 배치 인덱스 (data, target) = 미니배치
@@ -137,7 +139,7 @@ def train(model, train_loader, optimizer):
         optimizer.step()    # 파라미터 업데이트
 
 
-# 모델 평가
+# 모델 평가 함수
 def evaluate(model, test_loader):
     model.eval()       # 평가를 위해 훈련과정에서 Dropout 한 노드설정을 해제
     test_loss = 0      # Loss 값 초기화
@@ -156,3 +158,30 @@ def evaluate(model, test_loader):
     test_accuracy = 100. * correct / len(test_loader.dataset)       # 정확도 값을 Batch 값으로 나누어 미니 배치마다의 정확도 평균을 구함
     return test_loss, test_accuracy
 
+
+# 모델 학습 실행
+def train_baseline(model, train_loader, val_loader, optimizer, num_epochs):
+    best_acc = 0.0
+    best_model_wts = copy.deepcopy(model.state_dict())
+
+    for epoch in range(1, num_epochs + 1):
+        since = time.time()
+        train(model, train_loader, optimizer)
+        train_loss, train_acc = evaluate(model, train_loader)
+        val_loss, val_acc = evaluate(model, val_loader)
+
+        if val_acc > best_acc:
+            best_acc = val_acc
+            best_model_wts = copy.deepcopy(model.state_dict())
+
+        time_elapsed = time.time() - since
+        print('-------------- epoch {} ----------------'.format(epoch))
+        print('train Loss: {:.4f}, Accuracy: {:.2f}%'.format(train_loss, train_acc))
+        print('val Loss: {:.4f}, Accuracy: {:.2f}%'.format(val_loss, val_acc))
+        print('Completed in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+    model.load_state_dict(best_model_wts)
+    return model
+
+
+base = train_baseline(model_base, train_loader, val_loader, optimizer, EPOCH)
+torch.save(base, 'baseline.pt')
