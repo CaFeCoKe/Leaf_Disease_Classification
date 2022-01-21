@@ -128,7 +128,7 @@ optimizer = optim.Adam(cnn.parameters(), lr=0.001)      # adam optimizer 사용,
 # 훈련 데이터로 학습하여 모델화
 def train(model, train_loader, optimizer):
     model.train()       # 훈련을 위해 Dropout 설정
-    for batch_idx, (data, target) in enumerate(train_loader):   # train_loader 형태 = 배치 인덱스 (data, target) -> 왜 배치 인덱스가 필요할까??
+    for batch_idx, (data, target) in enumerate(train_loader):   # train_loader 형태 = 배치 인덱스 (data, target) = 미니배치
         data, target = data.to(DEVICE), target.to(DEVICE)
         optimizer.zero_grad()       # optimizer 초기화
         output = model(data)
