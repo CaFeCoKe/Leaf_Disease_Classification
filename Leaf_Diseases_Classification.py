@@ -159,8 +159,8 @@ def evaluate(model, test_loader):
     return test_loss, test_accuracy
 
 
-# 모델 학습 실행
-def train_baseline(model, train_loader, val_loader, optimizer, num_epochs):
+# 모델 학습 실행 함수
+def execute_model(model, train_loader, val_loader, optimizer, num_epochs):
     best_acc = 0.0
     best_model_wts = copy.deepcopy(model.state_dict())
 
@@ -183,5 +183,4 @@ def train_baseline(model, train_loader, val_loader, optimizer, num_epochs):
     return model
 
 
-base = train_baseline(model_base, train_loader, val_loader, optimizer, EPOCH)
-torch.save(base, 'baseline.pt')
+base = execute_model(model_base, train_loader, val_loader, optimizer, EPOCH)
