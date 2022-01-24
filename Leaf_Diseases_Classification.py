@@ -69,9 +69,9 @@ transform_base = transforms.Compose([transforms.Resize((64,64)), transforms.ToTe
 train_dataset = ImageFolder(root='./splitted/train', transform=transform_base)
 test_dataset = ImageFolder(root='./splitted/test', transform=transform_base)
 
-# Tensor화 된 이미지 데이터를 배치 사이즈로 분리(매 epoch마다 순서가 섞이며, 데이터 로딩에 서브프로세스 2개 사용)
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
-test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=2)
+# Tensor화 된 이미지 데이터를 배치 사이즈로 분리(매 epoch마다 순서가 섞이며, 데이터 로딩에 메인 프로세스 1개사용)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=0)
 
 
 # 네트워크 설계
@@ -110,7 +110,7 @@ class CNN_Model(nn.Module):
         x = self.conv3(x)
         x = self.relu(x)
         x = self.pool(x)
-        x = self.dropout(x, p=0.25, training=self.training)
+        x = F.dropout(x, p=0.25, training=self.training)
 
         # fully connect+activation -> Dropout -> fully connect
         x = x.view(-1, 4096)    # fc를 위한 데이터 재배치
