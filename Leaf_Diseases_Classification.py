@@ -184,5 +184,5 @@ def execute_model(model, train_loader, val_loader, optimizer, num_epochs):
     return model
 
 
-base = execute_model(model_base, train_loader, test_loader, optimizer, EPOCH)
+base = execute_model(cnn, train_loader, test_loader, optimizer, EPOCH)
 torch.save(base, 'CNN_model.pt')        # 학습 완료된 모델 저장
