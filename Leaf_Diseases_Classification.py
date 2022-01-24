@@ -8,7 +8,6 @@ import torch
 import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader
-
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
@@ -168,22 +167,22 @@ def execute_model(model, train_loader, val_loader, optimizer, num_epochs):
         start = time.time()     # 한 epoch 시작 시각 저장
         train(model, train_loader, optimizer)   # 훈련데이터로 모델 학습
         train_loss, train_acc = evaluate(model, train_loader)   # 훈련 데이터 모델 Loss, 정확도 계산
-        val_loss, val_acc = evaluate(model, val_loader)     # 테스트 데이터 모델 Loss, 정확도 계산
+        test_loss, test_acc = evaluate(model, test_loader)     # 테스트 데이터 모델 Loss, 정확도 계산
 
-        if val_acc > best_acc:      # 현 epoch의 정확도가 더 높을 시 갱신
-            best_acc = val_acc
+        if test_acc > best_acc:      # 현 epoch의 정확도가 더 높을 시 갱신
+            best_acc = test_acc
             best_model_wts = copy.deepcopy(model.state_dict())
 
         epoch_time = time.time() - start      # epoch 걸린 시간 (시작시각 - 종료시각)
 
         print('-------------- epoch {} ----------------'.format(epoch))
         print('train Loss: {:.4f}, Accuracy: {:.2f}%'.format(train_loss, train_acc))
-        print('val Loss: {:.4f}, Accuracy: {:.2f}%'.format(val_loss, val_acc))
+        print('test Loss: {:.4f}, Accuracy: {:.2f}%'.format(test_loss, test_acc))
         print('Completed in {:.0f}m {:.0f}s'.format(epoch_time // 60, epoch_time % 60))
 
     model.load_state_dict(best_model_wts)   # 정확도가 가장 높은 모델을 불러오기
     return model
 
 
-base = execute_model(model_base, train_loader, val_loader, optimizer, EPOCH)
+base = execute_model(model_base, train_loader, test_loader, optimizer, EPOCH)
 torch.save(base, 'CNN_model.pt')        # 학습 완료된 모델 저장
