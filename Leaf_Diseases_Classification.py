@@ -159,7 +159,7 @@ def evaluate(model, test_loader):
 
 
 # 모델 학습 실행 함수
-def execute_model(model, train_loader, val_loader, optimizer, num_epochs):
+def execute_model(model, train_loader, test_loader, optimizer, num_epochs):
     best_acc = 0.0      # 가장 높은 정확도 저장
     best_model_wts = copy.deepcopy(model.state_dict())      # 가장 높은 정확도 모델 저장
 
