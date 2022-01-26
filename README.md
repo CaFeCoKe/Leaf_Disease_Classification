@@ -5,6 +5,9 @@ https://user-images.githubusercontent.com/86700191/150724332-cde6c381-2a9b-4eec-
 
 ## 1. 사용 라이브러리
 - PyTorch : 이미지 데이터 전처리 및 Tensor화, CNN Network 구성
+- os, shutil :  파일 및 디렉토리 생성, 삭제, 복사
+- time : epoch 1회에 걸린 시간 측정
+- copy : 가장 높은 정확도를 지닌 모델을 저장
 
 ## 2. 알고리즘 순서도
 ![Leaf_Classification](https://user-images.githubusercontent.com/86700191/151174087-52378e6c-ccb5-4af6-8f03-1cfc5757efa7.png)
