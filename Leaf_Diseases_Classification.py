@@ -166,8 +166,8 @@ def execute_model(model, train_loader, test_loader, optimizer, num_epochs):
     for epoch in range(1, num_epochs + 1):
         start = time.time()     # 한 epoch 시작 시각 저장
         train(model, train_loader, optimizer)   # 훈련데이터로 모델 학습
-        train_loss, train_acc = evaluate(model, train_loader)   # 훈련 데이터 모델 Loss, 정확도 계산
-        test_loss, test_acc = evaluate(model, test_loader)     # 테스트 데이터 모델 Loss, 정확도 계산
+        train_loss, train_acc = evaluate(model, train_loader)   # 훈련 데이터와의 Loss, 정확도 계산
+        test_loss, test_acc = evaluate(model, test_loader)     # 테스트 데이터와의 Loss, 정확도 계산
 
         if test_acc > best_acc:      # 현 epoch의 정확도가 더 높을 시 갱신
             best_acc = test_acc
