@@ -16,8 +16,11 @@ import torch.optim as optim
 original_dataset_dir = './dataset'
 classes_list = os.listdir(original_dataset_dir)
 
-# 훈련, 테스트 데이터를 저장할 기본폴더 생성
+# 훈련, 테스트 데이터를 저장할 기본폴더 생성 (이미 폴더 있다면 삭제후 진행)
 base_dir = './splitted'
+if os.path.isdir(base_dir):
+    shutil.rmtree(base_dir)
+    print("delete directory of previously used files")
 os.mkdir(base_dir)
 
 # splitted 폴더에 훈련, 테스트 데이터 폴더 생성
@@ -163,7 +166,7 @@ def execute_model(model, train_loader, test_loader, optimizer, num_epochs):
     best_acc = 0.0      # 가장 높은 정확도 저장
     best_model_wts = copy.deepcopy(model.state_dict())      # 가장 높은 정확도 모델 저장
 
-    for epoch in range(1, num_epochs + 1):
+    for epoch in range(1, num_epochs+1):
         start = time.time()     # 한 epoch 시작 시각 저장
         train(model, train_loader, optimizer)   # 훈련데이터로 모델 학습
         train_loss, train_acc = evaluate(model, train_loader)   # 훈련 데이터와의 Loss, 정확도 계산
