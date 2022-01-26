@@ -7,7 +7,7 @@ https://user-images.githubusercontent.com/86700191/150724332-cde6c381-2a9b-4eec-
 - PyTorch : 이미지 데이터 전처리 및 Tensor화, CNN Network 구성
 
 ## 2. 알고리즘 순서도
-
+https://user-images.githubusercontent.com/86700191/151174087-52378e6c-ccb5-4af6-8f03-1cfc5757efa7.png
 ## 3. 유의점
 - 훈련, 테스트 데이터를 분할하여 저장할 폴더인 splitted 폴더가 없어야 한다.
 - DataLoader의 파라미터 중 num_worker는 멀티프로세스의 수를 정하는 것인데 윈도우환경에서는 default값인 0 (메인프로세스 1개 사용)을 사용하지 않으면 BrokenPipeError가 발생할 수 있다.
