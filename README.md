@@ -14,8 +14,10 @@ https://user-images.githubusercontent.com/86700191/150724332-cde6c381-2a9b-4eec-
 
 ## 3. 결과
 - 훈련 데이터, 테스트 데이터 분할 개수
+
 ![train_test](https://user-images.githubusercontent.com/86700191/151299477-13f8fec4-93e0-49ae-9710-ef7a13e63761.PNG)
 - epoch 진행에 따른 모델의 완성도
+
 ![epoch1](https://user-images.githubusercontent.com/86700191/151299482-11b6a2af-cc30-42b5-b5a7-c73f68479e41.PNG)
 ![epoch2](https://user-images.githubusercontent.com/86700191/151299483-2e9b0bc6-e0c9-4996-9ccd-8e8467fa92f0.PNG)
 
