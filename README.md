@@ -13,7 +13,7 @@ https://user-images.githubusercontent.com/86700191/150724332-cde6c381-2a9b-4eec-
 ![Leaf_Classification](https://user-images.githubusercontent.com/86700191/151174087-52378e6c-ccb5-4af6-8f03-1cfc5757efa7.png)
 
 ## 3. 결과
-- 훈련 데이터, 테스트 데이터 분할 개수
+- 훈련 데이터, 테스트 데이터 분할 개수 (비율 7:3)
 
 ![train_test](https://user-images.githubusercontent.com/86700191/151299477-13f8fec4-93e0-49ae-9710-ef7a13e63761.PNG)
 - epoch 진행에 따른 모델의 완성도
