@@ -13,7 +13,7 @@ https://user-images.githubusercontent.com/86700191/150724332-cde6c381-2a9b-4eec-
 ![Leaf_Classification](https://user-images.githubusercontent.com/86700191/151174087-52378e6c-ccb5-4af6-8f03-1cfc5757efa7.png)
 
 ## 3. 네트워크 구성
-
+![Leaf_classification_network](https://user-images.githubusercontent.com/86700191/151658933-d93b3d3f-3ed0-4292-b473-b694f52d1497.png)
 
 ## 4. 결과
 - 훈련 데이터, 테스트 데이터 분할 개수 (비율 7:3)
